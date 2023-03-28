@@ -16,7 +16,7 @@ import transactionRouter from './routes/transaction';
 
 const app = express();
 dotenv.config();
-const mongoURI = "mongodb+srv://dbnurudeen:nurudeen992@cluster0.89qyi.mongodb.net/fentbooks"
+const mongoURI = process.env.MONGO_URI as string;
 
 mongoose.connect(mongoURI)
   .then((result) => {

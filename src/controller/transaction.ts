@@ -22,8 +22,8 @@ export const createTransaction = async (req: any, res: Response) => {
       });
     }
     const user = await UserModel.findOne({ _id: currentUser._id });
-    const updatedBalance = user.accountBalance - transactionData.amount;
-    const updatedExpenses = user.totalExpenses + transactionData.amount;
+    const updatedBalance = user.accountBalance - +transactionData.amount;
+    const updatedExpenses = user.totalExpenses + +transactionData.amount;
     if (user.accountBalance < transactionData.amount) {
       return res.status(401).send({
         status: "error",
