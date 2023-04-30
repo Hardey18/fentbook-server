@@ -35,11 +35,31 @@ const InvoiceSchema = new Schema(
       type: "number",
       required: true,
     },
+    vat: {
+      type: "number",
+      required: true,
+    },
     totalPrice: {
       type: "number",
       required: true,
     },
+    trackTotal: {
+      type: "number",
+      required: true,
+    },
+    grandTotal: {
+      type: "number",
+      required: true,
+    },
+    quantity: {
+      type: "number",
+      required: true,
+    },
     invoiceId: {
+      type: "string",
+      required: true,
+    },
+    description: {
       type: "string",
       required: true,
     },

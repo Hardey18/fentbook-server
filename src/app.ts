@@ -13,6 +13,7 @@ import productRouter from './routes/product';
 import customerRouter from './routes/customer';
 import invoiceRouter from './routes/invoice';
 import transactionRouter from './routes/transaction';
+import emailRouter from './routes/sendMail'
 
 const app = express();
 dotenv.config();
@@ -44,6 +45,7 @@ app.use('/api/v1/product', productRouter);
 app.use('/api/v1/customer', customerRouter);
 app.use('/api/v1/invoice', invoiceRouter);
 app.use('/api/v1/transaction', transactionRouter);
+app.use('/api/v1/email', emailRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

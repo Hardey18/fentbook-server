@@ -1,5 +1,9 @@
-export const betweenRandomNumber = (min: number, max: number) => {  
-    return Math.floor(
-      Math.random() * (max - min + 1) + min
-    )
-  }
+export function getRandomNumber(length = 10) {
+  const min = Math.pow(10, length - 1);
+  const max = Math.pow(10, length) - 1;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export const numberWithCommas = (x: any) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};

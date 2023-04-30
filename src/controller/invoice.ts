@@ -4,7 +4,7 @@ import { InvoiceModel } from "../model/invoice";
 import { ProductModel } from "../model/product";
 import { UserModel } from "../model/user";
 import { ErrorType } from "../typings";
-import { betweenRandomNumber } from "../utils/randomNumber";
+import { getRandomNumber } from "../utils/randomNumber";
 
 export const createInvoice = async (req: any, res: Response) => {
   const customerId = req.params.customerId;
@@ -16,24 +16,28 @@ export const createInvoice = async (req: any, res: Response) => {
     const customer = await CustomerModel.findOne({ _id: customerId });
     const product = await ProductModel.findOne({ _id: productId });
     const user = await UserModel.findOne({ _id: currentUser._id });
-    console.log({ user, product });
-    let totalPrice = +invoiceData.shippingCost + product.price;
-    let taxRate = +(product.price * 0.15).toFixed();
-    let grandTotal = totalPrice + taxRate
+    const price = +invoiceData.totalPrice * invoiceData.quantity;
+    let totalPrice = +invoiceData.shippingCost + price;
+    let vatRate = (+invoiceData.vat / 100) * price;
+    console.log({ totalPrice, vatRate, invoiceData, price });
+    let grandTotal = totalPrice + vatRate;
     await UserModel.findOneAndUpdate(
       { _id: user._id },
-      { totalIncome: user.totalIncome + grandTotal }
+      {
+        totalIncome: user.totalIncome + grandTotal,
+        netProfit: user.totalIncome + grandTotal - user.totalExpenses,
+      }
     );
-    console.log({ shipping: invoiceData.shippingCost, price: product.price, totalPrice, taxRate, grandTotal });
-    const invoiceNumber = Math.floor(100000 + Math.random() * 900000);
     const newInvoice = await new InvoiceModel({
       ...invoiceData,
       fullname: `${currentUser.firstname} ${currentUser.lastname}`,
       userId: currentUser._id,
       customer,
       product,
-      totalPrice: grandTotal,
-      invoiceId: `INVOICE-${betweenRandomNumber(10000000, 99999999)}`,
+      grandTotal,
+      trackTotal: grandTotal,
+      netProfit: user.totalIncome - user.totalExpenses,
+      invoiceId: `INVOICE-${getRandomNumber()}`,
       verified: false,
     });
     newInvoice.save();
@@ -52,13 +56,13 @@ export const createInvoice = async (req: any, res: Response) => {
 };
 
 export const verifyInvoice = async (req: any, res: Response) => {
+  const invoiceData = req.body;
   const currentUser: any = req.user;
   const invoiceId = req.params.invoiceId;
   try {
     const invoice = await InvoiceModel.findOne({ _id: invoiceId });
     const user = await UserModel.findOne({ _id: currentUser._id });
-    const updatedBalance = invoice.totalPrice + user.accountBalance;
-    console.log("INVOICE", invoice);
+    const updatedBalance = +invoiceData.amount + user.accountBalance;
     if (!invoice) {
       return res.status(409).send({
         status: "error",
@@ -66,18 +70,28 @@ export const verifyInvoice = async (req: any, res: Response) => {
         message: `Invoice does not exist`,
       });
     }
-    if (invoice.verified === true) {
+    if (+invoiceData.amount > invoice.trackTotal) {
       return res.status(409).send({
         status: "error",
         path: req.url,
-        message: `Invoice previously verified`,
+        message: `Amount greater than balance`,
       });
+    } else {
+      await UserModel.findOneAndUpdate(
+        { _id: currentUser._id },
+        { accountBalance: updatedBalance }
+      );
+      await InvoiceModel.findOneAndUpdate(
+        { _id: invoiceId },
+        { trackTotal: invoice.trackTotal - +invoiceData.amount }
+      );
     }
-    await UserModel.findOneAndUpdate(
-      { _id: currentUser._id },
-      { accountBalance: updatedBalance }
-    );
-    await InvoiceModel.findOneAndUpdate({ _id: invoiceId }, { verified: true });
+    if (invoice.trackTotal - +invoiceData.amount === 0) {
+      await InvoiceModel.findOneAndUpdate(
+        { _id: invoiceId },
+        { verified: true }
+      );
+    }
     res.status(201).send({
       status: "success",
       path: req.url,
@@ -106,8 +120,8 @@ export const getAllInvoices = async (req: any, res: Response) => {
 
 export const getSingleInvoice = async (req: any, res: Response) => {
   try {
-  const invoiceId = req.params.id;
-    const invoice = await InvoiceModel.find({ _id: invoiceId });
+    const invoiceId = req.params.id;
+    const invoice: any = await InvoiceModel.find({ _id: invoiceId });
     res.status(201).send({
       status: "success",
       path: req.url,

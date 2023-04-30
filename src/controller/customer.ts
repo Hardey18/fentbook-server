@@ -7,17 +7,6 @@ export const createCustomer = async (req: any, res: Response) => {
   const customerData = req.body;
   const currentUser: any = req.user;
   try {
-    const customerPhoto = await cloudinary.uploader.upload(
-      req.body.customerPhoto,
-      {
-        allowed_formats: ["jpg", "png", "svg", "jpeg"],
-        public_id: "",
-        folder: "fentbooksCustomers",
-      }
-    );
-    if (!customerPhoto) {
-      throw new Error('Image is not a valid format. Only jpg, png, svg and jpeg allowed');
-    }
     const getExistingCustomer = await CustomerModel.findOne({
       customerEmail: customerData.customerEmail,
     });
@@ -25,13 +14,12 @@ export const createCustomer = async (req: any, res: Response) => {
       return res.status(409).send({
         status: "error",
         path: req.url,
-        message: `Category with the name - '${customerData.customerEmail}' already exist`,
+        message: `Customer with the email - '${customerData.customerEmail}' already exist`,
       });
     }
     const newCustomer = await new CustomerModel({
       ...customerData,
-      userId: currentUser._id,
-      customerPhoto: customerPhoto?.url
+      userId: currentUser._id
     });
     newCustomer.save();
     res.status(201).send({

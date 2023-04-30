@@ -35,10 +35,7 @@ const CustomerSchema = new Schema(
     note: {
       type: "string",
       required: true,
-    },
-    customerPhoto: {
-      type: "string",
-    },
+    }
   },
   { timestamps: true }
 );

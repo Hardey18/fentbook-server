@@ -8,14 +8,6 @@ const ProductSchema = new Schema(
       type: "string",
       required: true,
     },
-    description: {
-      type: "string",
-      required: true,
-    },
-    price: {
-      type: "number",
-      required: true,
-    },
     userId: {
       type: "string",
       required: true,

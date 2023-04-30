@@ -38,7 +38,7 @@ const UserSchema = new Schema({
         type: 'number',
         defaultValue: 0
     },
-    netWorth: {
+    netProfit: {
         type: 'number',
         defaultValue: 0
     },

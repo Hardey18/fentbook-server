@@ -28,6 +28,7 @@ export const createCategory = async (req: any, res: Response) => {
       data: newCategory,
     });
   } catch (error: any) {
+    console.log("ERROR", error);
     res.send({
       message: error.message,
       path: req.url,

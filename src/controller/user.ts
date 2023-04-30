@@ -33,7 +33,7 @@ export const createUser = async (req: Request, res: Response) => {
       accountBalance: 0,
       totalIncome: 0,
       totalExpenses: 0,
-      netWorth: 0,
+      netProfit: 0,
       profilePhoto: "",
       password: hashedPassword,
     });

@@ -11,10 +11,10 @@ export const createProduct = async (req: any, res: Response) => {
   try {
     const myCategories = await CategoryModel.find({ userId: currentUser._id });
     const myProducts = await ProductModel.find({ userId: currentUser._id });
-    const category = myCategories.filter((item) => {
+    const category = myCategories.filter((item: any) => {
       return item._id.toString() === categoryId;
     });
-    const product = myProducts.filter((item) => {
+    const product = myProducts.filter((item: any) => {
       return item.productName === productData.productName;
     });
 

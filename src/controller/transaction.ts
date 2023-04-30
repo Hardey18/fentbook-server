@@ -11,7 +11,7 @@ export const createTransaction = async (req: any, res: Response) => {
 
   try {
     const myCategories = await CategoryModel.find({ userId: currentUser._id });
-    const category = myCategories.filter((item) => {
+    const category = myCategories.filter((item: any) => {
       return item._id.toString() === categoryId;
     });
     if (!category.length) {
@@ -33,7 +33,11 @@ export const createTransaction = async (req: any, res: Response) => {
     }
     await UserModel.findByIdAndUpdate(
       { _id: currentUser._id },
-      { accountBalance: updatedBalance, totalExpenses: updatedExpenses }
+      {
+        accountBalance: updatedBalance,
+        totalExpenses: updatedExpenses,
+        netProfit: (user.totalIncome - +transactionData.amount) - user.totalExpenses
+      }
     );
     const newTransaction = await new TransactionModel({
       ...transactionData,
@@ -48,6 +52,7 @@ export const createTransaction = async (req: any, res: Response) => {
       data: newTransaction,
     });
   } catch (error: any) {
+    console.log("ERROR", error)
     const err = error as ErrorType;
     return res.status(500).send({
       status: "error",

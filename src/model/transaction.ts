@@ -20,6 +20,10 @@ const TransactionSchema = new Schema(
       type: [{ category: "string" }],
       required: true,
     },
+    vendor: {
+      type: "string",
+      required: true,
+    },
   },
   { timestamps: true }
 );
