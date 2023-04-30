@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "node ./bin/www",
     "dev": "tsnd --respawn ./bin/www",
-    "build": "tsc -w",
+    "build": "tsc",
     "dev:start": "nodemon ./bin/www"
   },
   "dependencies": {
