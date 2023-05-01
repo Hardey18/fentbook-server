@@ -1,5 +1,4 @@
 import { Response } from "express";
-// import { email } from "../services/nodemailer";
 import { invoiceTemplate } from "../services/emailTemplate";
 import Mailer from "../services/nodemailer";
 import path from "path";
@@ -11,26 +10,8 @@ export const sendMail = async (req: any, res: Response) => {
   const currentUser: any = req.user;
 
   try {
-    const invoice = await InvoiceModel.findOne({ _id: invoiceId });
-    const user = await UserModel.findOne({ _id: currentUser._id });
-    console.log("INVOICE", invoice, user);
-    // invoiceId = invoice.invoiceId
-    // grandTotal = invoice.grandTotal
-    // quantity = invoice.quantity
-    // totalPrice = invoice.totalPrice
-    // shippingCost = invoice.shippingCost
-    // description = invoice.description
-    // productName = invoice.product.productName
-    // customerName = invoice.customer.customerName
-    // customerEmail = invoice.customer.customerEmail
-    // customerPhone = invoice.customer.phoneNumber
-    // customerAddress = invoice.customer.addressLine, invoice.customer.city, invoice.customer.state
-    // vat = invoice.vat
-    // profilePhoto = user.profilePhoto
-    // email = user.email
-    // firstname = user.firstname
-    // lastname = user.lastname
-    // companyName = user.companyName
+    const invoice: any = await InvoiceModel.findOne({ _id: invoiceId });
+    const user: any = await UserModel.findOne({ _id: currentUser._id });
 
     const html = invoiceTemplate(
       user.profilePhoto,

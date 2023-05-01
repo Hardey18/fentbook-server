@@ -15,7 +15,7 @@ export const createInvoice = async (req: any, res: Response) => {
   try {
     const customer = await CustomerModel.findOne({ _id: customerId });
     const product = await ProductModel.findOne({ _id: productId });
-    const user = await UserModel.findOne({ _id: currentUser._id });
+    const user: any = await UserModel.findOne({ _id: currentUser._id });
     const price = +invoiceData.totalPrice * invoiceData.quantity;
     let totalPrice = +invoiceData.shippingCost + price;
     let vatRate = (+invoiceData.vat / 100) * price;
@@ -61,7 +61,7 @@ export const verifyInvoice = async (req: any, res: Response) => {
   const invoiceId = req.params.invoiceId;
   try {
     const invoice = await InvoiceModel.findOne({ _id: invoiceId });
-    const user = await UserModel.findOne({ _id: currentUser._id });
+    const user: any = await UserModel.findOne({ _id: currentUser._id });
     const updatedBalance = +invoiceData.amount + user.accountBalance;
     if (!invoice) {
       return res.status(409).send({

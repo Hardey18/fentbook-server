@@ -21,7 +21,7 @@ export const createTransaction = async (req: any, res: Response) => {
         message: `Category does not exist`,
       });
     }
-    const user = await UserModel.findOne({ _id: currentUser._id });
+    const user: any = await UserModel.findOne({ _id: currentUser._id });
     const updatedBalance = user.accountBalance - +transactionData.amount;
     const updatedExpenses = user.totalExpenses + +transactionData.amount;
     if (user.accountBalance < transactionData.amount) {
