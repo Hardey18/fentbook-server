@@ -9,7 +9,7 @@ export const createCustomer = async (req: any, res: Response) => {
   try {
     const getExistingCustomer = await CustomerModel.findOne({
       customerEmail: customerData.customerEmail,
-    });
+    }).where({ userId: currentUser._id});
     if (getExistingCustomer) {
       return res.status(409).send({
         status: "error",

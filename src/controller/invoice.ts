@@ -19,7 +19,6 @@ export const createInvoice = async (req: any, res: Response) => {
     const price = +invoiceData.totalPrice * invoiceData.quantity;
     let totalPrice = +invoiceData.shippingCost + price;
     let vatRate = (+invoiceData.vat / 100) * price;
-    console.log({ totalPrice, vatRate, invoiceData, price });
     let grandTotal = totalPrice + vatRate;
     await UserModel.findOneAndUpdate(
       { _id: user._id },
