@@ -41,10 +41,10 @@ export const getAllCustomers = async (req: any, res: Response) => {
     const currentUser: any = req.user;
     const myCustomers: any = await CustomerModel.find({ userId: currentUser._id });
     if (!myCustomers.length) {
-      return res.status(409).send({
-        status: "error",
+      return res.status(201).send({
+        status: "success",
         path: req.url,
-        message: `No customers created`,
+        data: [],
       });
     }
     if (myCustomers.length) {

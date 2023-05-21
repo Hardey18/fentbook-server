@@ -57,10 +57,10 @@ export const getAllProducts = async (req: any, res: Response) => {
     const currentUser: any = req.user;
     const allProducts = await ProductModel.find({ userId: currentUser._id });
     if (!allProducts.length) {
-      return res.status(401).send({
-        status: "error",
+      return res.status(201).send({
+        status: "success",
         path: req.url,
-        message: `No products created`,
+        data: [],
       });
     }
     if (allProducts.length) {

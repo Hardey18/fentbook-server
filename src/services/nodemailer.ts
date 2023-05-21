@@ -18,6 +18,13 @@ export = {
         if (err) reject(err);
         resolve(info);
       });
+      transport.verify(function (error, success) {
+        if (error) {
+          console.log("BIG ERROR", error);
+        } else {
+          console.log("Server is ready to take our messages");
+        }
+      });
     });
   },
 };

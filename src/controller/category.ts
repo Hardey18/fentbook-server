@@ -8,7 +8,8 @@ export const createCategory = async (req: any, res: Response) => {
   try {
     const getExistingCategory = await CategoryModel.findOne({
       category: categoryData.category,
-    });
+    }).where({ userId: currentUser._id})
+    console.log(getExistingCategory);
     if (getExistingCategory) {
       return res.status(409).send({
         status: "error",
@@ -41,10 +42,10 @@ export const getAllCategories = async (req: any, res: Response) => {
     const currentUser: any = req.user;
     const allCategories = await CategoryModel.find({ userId: currentUser._id });
     if (!allCategories.length) {
-      return res.status(401).send({
-        status: "error",
+      return res.status(201).send({
+        status: "success",
         path: req.url,
-        message: `No categories created`,
+        data: [],
       });
     }
     if (allCategories.length) {
