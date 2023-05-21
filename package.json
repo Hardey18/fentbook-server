@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "tsnd --respawn ./bin/www",
-    "build": "tsc -w",
+    "build": "tsc",
+    "dev:build": "tsc -w",
     "dev:start": "nodemon ./bin/www"
   },
   "dependencies": {
